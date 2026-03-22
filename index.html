@@ -1,0 +1,68 @@
+<script>
+let tripType = "Local Trip";
+let liveLocationLink = "";
+
+// SELECT SERVICE
+function setTrip(type) {
+  tripType = type;
+  alert("Selected: " + type);
+}
+
+// 📍 LIVE LOCATION
+function shareLiveLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      let lat = position.coords.latitude;
+      let lng = position.coords.longitude;
+
+      liveLocationLink = "https://www.google.com/maps?q=" + lat + "," + lng;
+
+      document.getElementById("pickup").value = "Live Location Shared ✅";
+    });
+  } else {
+    alert("GPS not supported");
+  }
+}
+
+// 💰 YOUR PRICING MODEL (UNCHANGED)
+function calculatePrice() {
+  let passengers = parseInt(document.getElementById("passengers").value) || 1;
+  let time = document.getElementById("time").value;
+
+  let base = 40;
+  let tripCharge = 50;
+
+  if (tripType === "Airport Transfer") tripCharge += 100;
+  if (tripType === "VIP Ride") tripCharge += 80;
+
+  let hour = time ? parseInt(time.split(":")[0]) : 12;
+
+  if (hour >= 6 && hour <= 9) tripCharge += 30;
+  if (hour >= 16 && hour <= 19) tripCharge += 30;
+  if (hour >= 22 || hour <= 4) tripCharge += 60;
+
+  let total = base + tripCharge + (passengers * 20);
+
+  document.getElementById("distance").innerText = "Distance: Live GPS";
+  document.getElementById("price").innerText = "Price: R" + total;
+}
+
+// 📲 WHATSAPP BOOKING
+function sendWhatsApp() {
+  let message =
+    "*LARCK SHUTTLE BOOKING*%0A%0A" +
+    "Service: " + tripType + "%0A" +
+    document.getElementById("price").innerText + "%0A" +
+    "Name: " + document.getElementById("name").value + "%0A" +
+    "Phone: " + document.getElementById("phone").value + "%0A" +
+    "Pickup: " + (liveLocationLink ? liveLocationLink : document.getElementById("pickup").value) + "%0A" +
+    "Drop-off: " + document.getElementById("dropoff").value + "%0A" +
+    "Date: " + document.getElementById("date").value + "%0A" +
+    "Time: " + document.getElementById("time").value + "%0A" +
+    "Passengers: " + document.getElementById("passengers").value;
+
+  let phoneNumber = "27617182639";
+
+  window.open("https://wa.me/" + phoneNumber + "?text=" + message);
+}
+</script>

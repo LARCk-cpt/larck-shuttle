@@ -1,7 +1,14 @@
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0f172a">
+<link rel="icon" href="icon.png">
 <script>
 let tripType = "Local Trip";
 let liveLocationLink = "";
-
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js');
+}
+</script>
 // SELECT SERVICE
 function setTrip(type) {
   tripType = type;
